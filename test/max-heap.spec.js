@@ -137,13 +137,13 @@ describe('MaxHeap', () => {
 			h.root.appendChild(new Node(2, 7));
 			h.root.left.appendChild(new Node(3, 20));
 
-/**
-        10                       20
-       /  \                     /  \
-      5    7  - shift up ->   10   7
-     /                        /
-    20                       5
-**/
+      /**
+              10                       20
+            /  \                     /  \
+            5    7  - shift up ->   10   7
+          /                        /
+          20                       5
+      **/
 
 			h.parentNodes = [
 				h.root.left,
@@ -345,13 +345,13 @@ describe('MaxHeap', () => {
 			h.push(16,16);
 			h.push(12,12);
 
-/**
-           32                             12
-          /  \                           /  \
-        15    16   - restoreRoot ->    15   16
-       /  \  /  \                    /  \  /
-     14  13  0   12                14  13  0
- **/
+      /**
+                 32                             12
+                /  \                           /  \
+              15    16   - restoreRoot ->    15   16
+            /  \  /  \                    /  \  /
+          14  13  0   12                14  13  0
+      **/
 
 			const detached = h.detachRoot();
 			h.restoreRootFromLastInsertedNode(detached);
@@ -372,13 +372,13 @@ describe('MaxHeap', () => {
 			h.root.appendChild(new Node(2, 7));
 			h.root.left.appendChild(new Node(3, 5));
 
-/**
-          3                        20
-        /  \                      /  \
-      20    7  - shift down ->   5    7
-     /                          /
-    5                          3
-**/
+      /**
+                3                        20
+              /  \                      /  \
+            20    7  - shift down ->   5    7
+          /                          /
+          5                          3
+      **/
 
 			h.parentNodes = [
 				h.root.left,
@@ -426,13 +426,13 @@ describe('MaxHeap', () => {
 
             h.parentNodes = [h.root.left.left, h.root.left.right, h.root.right.left, h.root.right.right];
 
-/**
-            1                             20
-          /  \                           /  \
-        10    20   - shiftDown ->      10   11
-       /  \  /  \                    /  \  /  \
-     5    8 11  6                   5   8 1   6
- **/
+            /**
+                        1                             20
+                      /  \                           /  \
+                    10    20   - shiftDown ->      10   11
+                  /  \  /  \                    /  \  /  \
+                5    8 11  6                   5   8 1   6
+            **/
 
             h.shiftNodeDown(h.root);
 

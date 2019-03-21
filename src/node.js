@@ -43,28 +43,28 @@ class Node {
     if (this.parent === null){
       return;
     }
-    
+
     let child = this;
     let parent = this.parent;
-    
+
     const childBuff = {
       parent: child.parent,
       left: child.left,
       right: child.right
     }
-    
+
     const parentBuff = {
       parent: parent.parent,
       left: parent.left,
       right: parent.right
     }
-    
+
     if (parentBuff.parent === null){
       child.parent = null;
     } else {
       parentBuff.parent._replaceChild(parent, child);
     }
-    
+
     if (parentBuff.left === child){
       child._setChild(parent, 'left');
       child._setChild(parentBuff.right, 'right');
@@ -72,12 +72,12 @@ class Node {
       child._setChild(parentBuff.left, 'left');
       child._setChild(parent, 'right')
     }
-    
+
     parent._setChild(childBuff.left, 'left');
     parent._setChild(childBuff.right, 'right');
 
   }
-  
+
   _replaceChild(oldChild, newChild){
     if (oldChild === this.left){
       this._setChild(newChild, 'left');
@@ -87,7 +87,7 @@ class Node {
       throw new Error('The node "oldChild" is not a child of the node "this".')
     }
   }
-  
+
   _setChild(child, position){
     if (position === 'left'){
       this.left = child;
@@ -96,8 +96,8 @@ class Node {
     } else {
       throw new Error('The option position is not equal to the "left" or "right" strings.')
     }
-    
-    if (child !== null){
+
+    if (child && child !== null){
       child.parent = this;
     }
   }
