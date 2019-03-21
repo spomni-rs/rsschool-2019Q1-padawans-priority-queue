@@ -1,14 +1,14 @@
 class Node {
-	constructor(data, priority) {
+  constructor(data, priority) {
     this.data = data;
     this.priority = priority;
 
     this.parent = null;
     this.left = null;
     this.right = null;
-	}
+  }
 
-	appendChild(node) {
+  appendChild(node) {
     if (this.left === null){
       this.left  = node;
     } else if (this.right === null){
@@ -18,9 +18,9 @@ class Node {
     }
 
     node.parent = this;
-	}
+  }
 
-	removeChild(node) {
+  removeChild(node) {
     if (node === this.left){
       this.left = null;
     } else if (node === this.right){
@@ -30,137 +30,79 @@ class Node {
     }
 
     node.parent = null;
-	}
+  }
 
-	remove() {
+  remove() {
     if (this.parent !== null){
       this.parent.removeChild(this);
     }
-	}
+  }
 
-	swapWithParent() {
+  swapWithParent() {
 
     if (this.parent === null){
       return;
     }
-
-    //     one                  >     one
-    //    /   \                 >    /   \
-    //  two   three             >  two   five(this)
-    //        /   \             >        /   \
-    //     four  five(this)     >     four   three
-    //            /     \       >            /   \
-    //          six    seven    >          six   seven
-
-    let five = this;
-    let six = this.left; // {Node|null}
-    let seven = this.right; // {Node|null}
-
-    this.left = null;
-    this.right = null;
-
-    //     one                  >     one
-    //    /   \                 >    /   \
-    //  two   three             >  two   five(this)
-    //        /   \             >        /   \
-    //     four  five(this)     >     four   three
-    //                          >            /   \
-    //          six    seven    >          six   seven
-
-    let three = this.parent;
-    let one = three.parent;
-
-    let whereWasFive = three._whatChildIs(five);
-
-    if (one){
-      if (one.left === three){
-        one.removeChild(three);
-        one.left = five;
-        five.parent = one;
-      } else {
-        one.removeChild(three);
-        one.right = five;
-        five.parent = one;
-      }
+    
+    let child = this;
+    let parent = this.parent;
+    
+    const childBuff = {
+      parent: child.parent,
+      left: child.left,
+      right: child.right
     }
-
-    //     one                  >     one
-    //    /   \                 >    /   \
-    //  two  five(this)         >  two   five(this)
-    //                          >        /   \
-    //     three                >     four   three
-    //     /  \                 >            /   \
-    //  four       six    seven >          six   seven
-
-    if (whereWasFive === 'left'){
-
-      let four = three.right;
-
-      if (four){
-        three.removeChild(four);
-        five._appendChildRight(four);
-      }
-
-      five._appendChildLeft(three);
-
-    } else if (whereWasFive === 'right'){
-
-      let four = three.left;
-
-      if (four){
-        three.removeChild(four);
-        five._appendChildLeft(four);
-      }
-
-      five._appendChildRight(three);
+    
+    const parentBuff = {
+      parent: parent.parent,
+      left: parent.left,
+      right: parent.right
     }
-
-    //     one                  >     one
-    //    /   \                 >    /   \
-    //  two  five(this)         >  two   five(this)
-    //         /   \            >        /   \
-    //      four   three        >     four   three
-    //                          >            /   \
-    //         six    seven     >          six   seven
-
-    if (six){
-      three._appendChildLeft(six);
-    }
-
-    if (seven){
-      three._appendChildRight(seven);
-    }
-
-
-  }
-
-  _appendChildLeft(node){
-    if (this.left !== null){
-      this.removeChild(this.left);
-    }
-
-    this.left = node;
-    node.parent = this;
-  }
-
-  _appendChildRight(node){
-    if (this.right !== null){
-      this.removeChild(this.right);
-    }
-
-    this.right = node;
-    node.parent = this;
-  }
-
-  _whatChildIs(node){
-    if (node === this.left){
-      return 'left'
-    } else if (node === this.right){
-      return 'right';
+    
+    if (parentBuff.parent === null){
+      child.parent = null;
     } else {
-      null
+      parentBuff.parent._replaceChild(parent, child);
+    }
+    
+    if (parentBuff.left === child){
+      child._setChild(parent, 'left');
+      child._setChild(parentBuff.right, 'right');
+    } else {
+      child._setChild(parentBuff.left, 'left');
+      child._setChild(parent, 'right')
+    }
+    
+    parent._setChild(childBuff.left, 'left');
+    parent._setChild(childBuff.right, 'right');
+
+  }
+  
+  _replaceChild(oldChild, newChild){
+    if (oldChild === this.left){
+      this._setChild(newChild, 'left');
+    } else if (oldChild === this.right){
+      this._setChild(newChild, 'right');
+    } else {
+      throw new Error('The node "oldChild" is not a child of the node "this".')
     }
   }
+  
+  _setChild(child, position){
+    if (position === 'left'){
+      this.left = child;
+    } else if (position === 'right'){
+      this.right = child;
+    } else {
+      throw new Error('The option position is not equal to the "left" or "right" strings.')
+    }
+    
+    if (child !== null){
+      child.parent = this;
+    }
+  }
+
+
 }
 
 module.exports = Node;
